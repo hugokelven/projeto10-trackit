@@ -1,0 +1,21 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+/* utilitários */
+.centralizar-conteudo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.centralizar-conteudo-em-coluna {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
