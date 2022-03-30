@@ -1,52 +1,201 @@
+import { useState } from "react"
 import { useContext } from "react";
+import axios from "axios";
 import styled from 'styled-components'
 
 import UserContext from "../../contexts/UsuarioContext";
+import Menu from "../Menu";
+import Topo from "../Topo";
+import Dia from "./Dia";
 
 export default function TelaHabitos() {
 
-    const { usuario, setUsuario } = useContext(UserContext);
-    console.log(usuario)
+    const { usuario } = useContext(UserContext)
+
+    const diasDaSemana = ["D", "S", "T", "Q", "Q", "S", "S"]
+
+    const [habito, setHabito] = useState("")
+    const [exibirCriacao, setExibirCriacao] = useState("escondido")
+    const [diasSelecionados, setDiasSelecionados] = useState([])
+
+    console.log(diasSelecionados)
+
+    function obterDiaSelecionado(id) {
+        setDiasSelecionados([...diasSelecionados, id])
+    }
+
+    function removerDiaDesmarcado(id) {
+        setDiasSelecionados(
+            diasSelecionados.filter(el => {
+                if (el !== id) return true
+            })
+        )
+    }
+
+    function cadastrarHabito(e) {
+        e.preventDefault()
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${usuario.token}`
+            }
+        }
+
+        const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", {name: habito, days: diasSelecionados}, config)
+
+        promessa.then(resposta => {
+            console.log(resposta.data)
+        })
+
+        promessa.catch(erro => {alert(`Erro ${erro.response}. Tente novamente.`)})
+    }
 
     return (
         <Container>
-            <header>
-                <span>TrackIt</span>
-                {/* <img src={usuario.image} alt={usuario.name} /> */}
-            </header>
+            <Topo/>
+
+            <div>
+                <h1>Meus hábitos</h1>
+                <button onClick={() => {setExibirCriacao("")}}>+</button>
+            </div>
+
+            <form className={exibirCriacao} onSubmit={cadastrarHabito}>
+                <input
+                    type="text"
+                    placeholder='nome do habito'
+                    value={habito}
+                    onChange={e => {setHabito(e.target.value)}}
+                />
+
+                <div className="Dias-semana">
+                    {diasDaSemana.map((dia, i) =>
+                        <Dia
+                            key={i}
+                            id={i}
+                            dia={dia}
+                            obterDiaSelecionado={obterDiaSelecionado}
+                            removerDiaDesmarcado={removerDiaDesmarcado}
+                        />)}
+                </div>
+
+                <div className="Botoes">
+                    <button onClick={() => {setExibirCriacao("escondido")}}>Cancelar</button>
+                    <button type="submit">Salvar</button>
+                </div>
+            </form>
+
+            <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
+
+            <Menu/>
         </Container>
     )
 }
 
 const Container = styled.div`
-    header {
-        position: sticky;
-        z-index: 1;
-        top: 0; left: 0; right: 0;
+    height: 100vh;
 
-        height: 70px;
+    background: #F2F2F2;
 
-        padding: 0 18px;
+    div {
+        margin: 28px 18px;
 
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        background: #126BA5;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
     }
-    header span {
-        font-family: 'Playball', cursive;
+    div h1 {
         font-style: normal;
         font-weight: 400;
-        font-size: 38.982px;
-        line-height: 49px;
-        color: #FFFFFF;
+        font-size: 22.976px;
+        line-height: 29px;
+        color: #126BA5;
     }
-    header img {
-        width: 51px;
-        height: 51px;
+    div button {
+        width: 40px;
+        height: 35px;
 
-        border-radius: 98.5px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 26.976px;
+        line-height: 34px;
+        text-align: center;
+        color: #FFFFFF;
+
+        border: none;
+        border-radius: 4.6px;
+        
+        background: #52B6FF;
+    }
+
+    p {
+        margin: 0 18px;
+
+        font-weight: 400;
+        font-size: 17.976px;
+        line-height: 22px;
+
+        color: #666666;
+    }
+
+
+    form {
+        width: calc(100% - (2 * 18px));
+        min-height: 180px;
+
+        margin: 0 18px;
+        padding: 18px 18px 15px 18px;
+
+        border-radius: 5px;
+        
+        background: #FFFFFF;
+    }
+    form input {
+        width: 303px;
+        height: 45px;
+
+        margin-bottom: 10px;
+
+        border: 1px solid #D5D5D5;
+        border-radius: 5px;
+        
+        background: #FFFFFF;
+    }
+
+    .Dias-semana {
+        width: 303px;
+        
+        margin: 0;
+        padding: 0;
+
+        display: flex;
+        justify-content: start;
+    }
+
+    .Botoes {
+        margin: 29px 0 0 0;
+
+        justify-content: end;
+    }
+    .Botoes button {
+        width: 84px;
+        height: 35px;
+
+        margin-left: 23px;
+
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15.976px;
+        line-height: 20px;
+        text-align: center;
+        color: #FFFFFF;
+
+        border-radius: 4.63636px;
+        
+        background: #52B6FF;
+    }
+    .Botoes button:first-child {
+        color: #52B6FF;
+
+        background: #FFFFFF;
     }
 `

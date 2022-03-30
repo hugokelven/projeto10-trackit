@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import Logo from "./../../assets/logo.jpg"
 
-export default function TelaLogin({setUsuario}) {
+export default function TelaLogin() {
 
     const navigate = useNavigate()
 
@@ -19,13 +19,13 @@ export default function TelaLogin({setUsuario}) {
     function realizaLogin(e) {
         e.preventDefault()
 
-        console.log(login)
-
         const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", login)
 
         promessa.then(resposta => {
-            console.log(resposta.data)
-            setUsuario(resposta.data)
+            const {image, name, token} = resposta.data
+            const usuario = {imagem: image, nome: name, token: token}
+            console.log(usuario)
+            window.localStorage.setItem('usuario', JSON.stringify(usuario));
             navigate("/habitos")
         })
 

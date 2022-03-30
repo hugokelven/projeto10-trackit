@@ -1,5 +1,18 @@
+import styled from 'styled-components'
+import Menu from '../Menu';
+
+import Topo from "../Topo";
+
 export default function TelaHoje() {
     return (
-        <div>hoje</div>
+        <Container>
+            <Topo/>
+
+            <Menu/>
+        </Container>
     )
 }
+
+const Container = styled.div`
+    
+`

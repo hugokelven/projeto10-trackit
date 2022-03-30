@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import TelaCadastro from "./TelaCadastro";
 import TelaHabitos from "./TelaHabitos";
@@ -11,6 +11,10 @@ import UserContext from "../contexts/UsuarioContext";
 export default function App() {
 
     const [usuario, setUsuario] = useState(null)
+
+    useEffect(() => {
+        setUsuario(JSON.parse(window.localStorage.getItem('usuario')))
+    }, [])
 
     return (
 
