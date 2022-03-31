@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useContext } from "react";
 import axios from "axios";
 import styled from 'styled-components'
@@ -7,6 +7,7 @@ import UserContext from "../../contexts/UsuarioContext";
 import Menu from "../Menu";
 import Topo from "../Topo";
 import Dia from "./Dia";
+import Habito from "./Habito";
 
 export default function TelaHabitos() {
 
@@ -15,10 +16,30 @@ export default function TelaHabitos() {
     const diasDaSemana = ["D", "S", "T", "Q", "Q", "S", "S"]
 
     const [habito, setHabito] = useState("")
+    const [meusHabitos, setMeusHabitos] = useState([])
     const [exibirCriacao, setExibirCriacao] = useState("escondido")
     const [diasSelecionados, setDiasSelecionados] = useState([])
 
-    console.log(diasSelecionados)
+    // Exibir habitos do usuario
+    useEffect(() => {
+        if (usuario !== null) {
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${usuario.token}`
+                }
+            }
+    
+            const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
+    
+            promessa.then(resposta => {
+                console.log(resposta.data)
+                setMeusHabitos(resposta.data)
+            })
+    
+            promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
+        }
+    }, [usuario])
 
     function obterDiaSelecionado(id) {
         setDiasSelecionados([...diasSelecionados, id])
@@ -47,17 +68,17 @@ export default function TelaHabitos() {
             console.log(resposta.data)
         })
 
-        promessa.catch(erro => {alert(`Erro ${erro.response}. Tente novamente.`)})
+        promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
     }
 
     return (
         <Container>
             <Topo/>
 
-            <div>
+            <Titulo>
                 <h1>Meus hábitos</h1>
                 <button onClick={() => {setExibirCriacao("")}}>+</button>
-            </div>
+            </Titulo>
 
             <form className={exibirCriacao} onSubmit={cadastrarHabito}>
                 <input
@@ -79,10 +100,20 @@ export default function TelaHabitos() {
                 </div>
 
                 <div className="Botoes">
-                    <button onClick={() => {setExibirCriacao("escondido")}}>Cancelar</button>
+                    <button type="button" onClick={() => {setExibirCriacao("escondido")}}>Cancelar</button>
                     <button type="submit">Salvar</button>
                 </div>
             </form>
+
+            <ul>
+                {meusHabitos?.map(meuHabito => 
+                    <Habito
+                        key={meuHabito.id}
+                        meuHabito={meuHabito}
+                        diasDaSemana={diasDaSemana}
+                    />
+                )}
+            </ul>
 
             <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
 
@@ -91,26 +122,22 @@ export default function TelaHabitos() {
     )
 }
 
-const Container = styled.div`
-    height: 100vh;
+const Titulo = styled.div`
+    margin: 28px 18px;
 
-    background: #F2F2F2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    div {
-        margin: 28px 18px;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    div h1 {
+    h1 {
         font-style: normal;
         font-weight: 400;
         font-size: 22.976px;
         line-height: 29px;
         color: #126BA5;
     }
-    div button {
+
+    button {
         width: 40px;
         height: 35px;
 
@@ -125,6 +152,16 @@ const Container = styled.div`
         border-radius: 4.6px;
         
         background: #52B6FF;
+    }
+`
+
+const Container = styled.div`
+    height: 100vh;
+
+    background: #F2F2F2;
+
+    ul {
+        margin: 0 18px;
     }
 
     p {
@@ -142,7 +179,7 @@ const Container = styled.div`
         width: calc(100% - (2 * 18px));
         min-height: 180px;
 
-        margin: 0 18px;
+        margin: 0 18px 20px 18px;
         padding: 18px 18px 15px 18px;
 
         border-radius: 5px;
@@ -174,6 +211,7 @@ const Container = styled.div`
     .Botoes {
         margin: 29px 0 0 0;
 
+        display: flex;
         justify-content: end;
     }
     .Botoes button {
@@ -189,7 +227,8 @@ const Container = styled.div`
         text-align: center;
         color: #FFFFFF;
 
-        border-radius: 4.63636px;
+        border: none;
+        border-radius: 4.6px;
         
         background: #52B6FF;
     }

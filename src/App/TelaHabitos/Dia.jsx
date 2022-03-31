@@ -37,18 +37,10 @@ const DiaDaSemana = styled.span`
     font-weight: 400;
     font-size: 19.976px;
     line-height: 25px;
-    /* color: #DBDBDB; */
     color: ${props => props.selecionado === true ? "#FFFFFF" : "#DBDBDB"};
     
     border: 1px solid #D5D5D5;
     border-radius: 5px;
     
-    /* background: #FFFFFF; */
     background: ${props => props.selecionado === true ? "#CFCFCF" : "#FFFFFF"};
-
-    /* .Selecionado {
-        color: #FFFFFF;
-
-        background: #CFCFCF;
-    } */
 `
