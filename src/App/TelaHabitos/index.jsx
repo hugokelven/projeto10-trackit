@@ -11,7 +11,7 @@ import Habito from "./Habito";
 
 export default function TelaHabitos() {
 
-    const { usuario } = useContext(UserContext)
+    const { usuario, progresso } = useContext(UserContext)
 
     const diasDaSemana = ["D", "S", "T", "Q", "Q", "S", "S"]
 
@@ -124,7 +124,7 @@ export default function TelaHabitos() {
 
             <SemHabitos meusHabitos={meusHabitos}>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</SemHabitos>
 
-            <Menu/>
+            <Menu progresso={progresso}/>
         </Container>
     )
 }

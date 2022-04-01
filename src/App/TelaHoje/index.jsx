@@ -10,7 +10,7 @@ import HabitoDeHoje from "./HabitoDeHoje";
 
 export default function TelaHoje() {
 
-    const { usuario } = useContext(UserContext)
+    const { usuario, progresso, setProgresso } = useContext(UserContext)
 
     const [habitosDoDia, setHabitosDoDia] = useState([])
     const [habitosConcluidos, setHabitosConcluidos] = useState([])
@@ -45,6 +45,8 @@ export default function TelaHoje() {
         }
     }, [usuario, recarregar])
 
+    setProgresso((habitosConcluidos.length/habitosDoDia.length) * 100)
+
     function recarregarHabitos() {
         setRecarregar(!recarregar)
     }
@@ -58,7 +60,9 @@ export default function TelaHoje() {
 
                 <NenhumConcluido habitosConcluidos={habitosConcluidos}>Nenhum hábito concluído ainda</NenhumConcluido>
 
-                <PorcentagemConclusao habitosConcluidos={habitosConcluidos}>{(habitosConcluidos.length/habitosDoDia.length) * 100}% dos hábitos concluídos</PorcentagemConclusao>
+                <PorcentagemConclusao habitosConcluidos={habitosConcluidos}>
+                    {((habitosConcluidos.length/habitosDoDia.length) * 100).toFixed(0)}% dos hábitos concluídos
+                </PorcentagemConclusao>
             </DiaAtual>
 
             <ul>
@@ -71,7 +75,7 @@ export default function TelaHoje() {
                 )}
             </ul>
 
-            <Menu/>
+            <Menu progresso={progresso}/>
         </Container>
     )
 }

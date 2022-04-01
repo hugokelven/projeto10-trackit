@@ -1,9 +1,14 @@
+import { useContext } from "react";
 import styled from 'styled-components'
 
+import UserContext from "../../contexts/UsuarioContext";
 import Menu from "../Menu";
 import Topo from "../Topo";
 
 export default function TelaHistorico() {
+
+    const { progresso } = useContext(UserContext)
+
     return (
         <Container>
             <Topo/>
@@ -12,7 +17,7 @@ export default function TelaHistorico() {
 
             <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
 
-            <Menu/>
+            <Menu progresso={progresso}/>
         </Container>
     )
 }

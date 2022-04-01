@@ -1,12 +1,34 @@
 import { Link } from "react-router-dom";
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import styled from 'styled-components'
 
-export default function Menu() {
+import 'react-circular-progressbar/dist/styles.css';
+
+export default function Menu({progresso}) {
+
     return(
         <Container>
             <Link to={"/habitos"}>
                 <div>Hábitos</div>
             </Link>
+
+            <Hoje>
+                <Link to={"/hoje"}>
+                    <CircularProgressbar
+                        value={progresso}
+                        text={`Hoje`}
+                        background={true}
+                        backgroundPadding={6}
+                        styles={buildStyles({
+                            pathColor: "#FFFFFF",
+                            textColor: "#FFFFFF",
+                            trailColor: '#52B6FF',
+                            backgroundColor: '#52B6FF',
+                        })}
+                    />;
+                </Link>
+            </Hoje>
+
             <Link to={"/historico"}>
                 <div>Histórico</div>
             </Link>
@@ -29,7 +51,7 @@ const Container = styled.footer`
 
     background: white;
 
-    div {
+    & a:first-child div, & a:last-child div {
         margin: 0 31px;
 
         font-style: normal;
@@ -43,4 +65,12 @@ const Container = styled.footer`
     a {
         text-decoration: none;
     }
+`
+const Hoje = styled.div`
+    position: absolute;
+    z-index: 2;
+    bottom: 10px; left: calc(50% - (91px / 2));
+
+    width: 91px;
+    height: 91px;
 `

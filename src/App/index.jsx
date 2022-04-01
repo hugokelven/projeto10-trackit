@@ -12,6 +12,7 @@ import UserContext from "../contexts/UsuarioContext";
 export default function App() {
 
     const [usuario, setUsuario] = useState(null)
+    const [progresso, setProgresso] = useState(0)
 
     useEffect(() => {
         setUsuario(JSON.parse(window.localStorage.getItem('usuario')))
@@ -19,12 +20,12 @@ export default function App() {
 
     return (
 
-        <UserContext.Provider value={{usuario, setUsuario}}>
+        <UserContext.Provider value={{usuario, setUsuario, progresso, setProgresso}}>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<TelaLogin setUsuario={setUsuario}/>} />
                     <Route path="/cadastro" element={<TelaCadastro/>} />
-                    <Route path="/habitos" element={<TelaHabitos usuario={usuario}/>} />
+                    <Route path="/habitos" element={<TelaHabitos/>} />
                     <Route path="/hoje" element={<TelaHoje/>} />
                     <Route path="/historico" element={<TelaHistorico/>}/>
                 </Routes>
