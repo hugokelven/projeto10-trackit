@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import UserContext from "../../contexts/UsuarioContext";
 import Lixeira from "../../assets/trash.svg"
 
-export default function Habito({meuHabito, diasDaSemana}) {
+export default function Habito({meuHabito, diasDaSemana, recarregarHabitos}) {
     
     const { usuario } = useContext(UserContext)
 
@@ -18,7 +18,7 @@ export default function Habito({meuHabito, diasDaSemana}) {
 
         const promessa = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${meuHabito.id}`, config)
 
-        promessa.then(resposta => {console.log(resposta.data)})
+        promessa.then(() => {recarregarHabitos()})
 
         promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
     }

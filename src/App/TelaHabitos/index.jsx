@@ -19,6 +19,7 @@ export default function TelaHabitos() {
     const [meusHabitos, setMeusHabitos] = useState([])
     const [exibirCriacao, setExibirCriacao] = useState("escondido")
     const [diasSelecionados, setDiasSelecionados] = useState([])
+    const [recarregar, setRecarregar] = useState(false)
 
     // Exibir habitos do usuario
     useEffect(() => {
@@ -39,7 +40,7 @@ export default function TelaHabitos() {
     
             promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
         }
-    }, [usuario])
+    }, [usuario, recarregar])
 
     function obterDiaSelecionado(id) {
         setDiasSelecionados([...diasSelecionados, id])
@@ -66,9 +67,14 @@ export default function TelaHabitos() {
 
         promessa.then(resposta => {
             console.log(resposta.data)
+            recarregarHabitos()
         })
 
         promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
+    }
+
+    function recarregarHabitos() {
+        setRecarregar(!recarregar)
     }
 
     return (
@@ -111,49 +117,17 @@ export default function TelaHabitos() {
                         key={meuHabito.id}
                         meuHabito={meuHabito}
                         diasDaSemana={diasDaSemana}
+                        recarregarHabitos={recarregarHabitos}
                     />
                 )}
             </ul>
 
-            <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
+            <SemHabitos meusHabitos={meusHabitos}>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</SemHabitos>
 
             <Menu/>
         </Container>
     )
 }
-
-const Titulo = styled.div`
-    margin: 28px 18px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    h1 {
-        font-style: normal;
-        font-weight: 400;
-        font-size: 22.976px;
-        line-height: 29px;
-        color: #126BA5;
-    }
-
-    button {
-        width: 40px;
-        height: 35px;
-
-        font-style: normal;
-        font-weight: 400;
-        font-size: 26.976px;
-        line-height: 34px;
-        text-align: center;
-        color: #FFFFFF;
-
-        border: none;
-        border-radius: 4.6px;
-        
-        background: #52B6FF;
-    }
-`
 
 const Container = styled.div`
     height: 100vh;
@@ -163,17 +137,6 @@ const Container = styled.div`
     ul {
         margin: 0 18px;
     }
-
-    p {
-        margin: 0 18px;
-
-        font-weight: 400;
-        font-size: 17.976px;
-        line-height: 22px;
-
-        color: #666666;
-    }
-
 
     form {
         width: calc(100% - (2 * 18px));
@@ -237,4 +200,48 @@ const Container = styled.div`
 
         background: #FFFFFF;
     }
+`
+const Titulo = styled.div`
+    margin: 28px 18px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 22.976px;
+        line-height: 29px;
+        color: #126BA5;
+    }
+
+    button {
+        width: 40px;
+        height: 35px;
+
+        font-style: normal;
+        font-weight: 400;
+        font-size: 26.976px;
+        line-height: 34px;
+        text-align: center;
+        color: #FFFFFF;
+
+        border: none;
+        border-radius: 4.6px;
+        
+        background: #52B6FF;
+    }
+`
+
+const SemHabitos = styled.p`
+    display: ${props => props.meusHabitos.length > 0 ? "none" : ""};
+
+    margin: 0 18px;
+
+    font-weight: 400;
+    font-size: 17.976px;
+    line-height: 22px;
+
+    color: #666666;
 `

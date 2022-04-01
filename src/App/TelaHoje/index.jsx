@@ -14,6 +14,7 @@ export default function TelaHoje() {
 
     const [habitosDoDia, setHabitosDoDia] = useState([])
     const [habitosConcluidos, setHabitosConcluidos] = useState([])
+    const [recarregar, setRecarregar] = useState(false)
 
     // Exibir habitos do dia
     useEffect(() => {
@@ -42,7 +43,11 @@ export default function TelaHoje() {
 
             promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
         }
-    }, [usuario])
+    }, [usuario, recarregar])
+
+    function recarregarHabitos() {
+        setRecarregar(!recarregar)
+    }
 
     return (
         <Container>
@@ -61,6 +66,7 @@ export default function TelaHoje() {
                     <HabitoDeHoje
                         key={habitoDoDia.id}
                         habitoDoDia={habitoDoDia}
+                        recarregarHabitos={recarregarHabitos}
                     />
                 )}
             </ul>

@@ -1,10 +1,15 @@
+import { Link } from "react-router-dom";
 import styled from 'styled-components'
 
 export default function Menu() {
     return(
         <Container>
-            <span>Hábitos</span>
-            <span>Histórico</span>
+            <Link to={"/habitos"}>
+                <div>Hábitos</div>
+            </Link>
+            <Link to={"/historico"}>
+                <div>Histórico</div>
+            </Link>
         </Container>
     )
 }
@@ -24,7 +29,7 @@ const Container = styled.footer`
 
     background: white;
 
-    span {
+    div {
         margin: 0 31px;
 
         font-style: normal;
@@ -33,5 +38,9 @@ const Container = styled.footer`
         line-height: 22px;
         text-align: center;
         color: #52B6FF;
+    }
+
+    a {
+        text-decoration: none;
     }
 `

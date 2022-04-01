@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import UserContext from "../../contexts/UsuarioContext";
 import Check from "../../assets/check.svg"
 
-export default function HabitoDeHoje({habitoDoDia}) {
+export default function HabitoDeHoje({habitoDoDia, recarregarHabitos}) {
 
     const { usuario } = useContext(UserContext)
 
@@ -34,7 +34,7 @@ export default function HabitoDeHoje({habitoDoDia}) {
 
         const promessa = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/${acao}`, {}, config)
 
-        promessa.then(resposta => console.log(resposta.data))
+        promessa.then(() => {recarregarHabitos()})
 
         promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
     }
