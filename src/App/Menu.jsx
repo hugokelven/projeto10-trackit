@@ -1,10 +1,52 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react"
+import { useContext } from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import axios from "axios";
 import styled from 'styled-components'
+
+import UserContext from "../contexts/UsuarioContext";
 
 import 'react-circular-progressbar/dist/styles.css';
 
-export default function Menu({progresso}) {
+export default function Menu({recarregar}) {
+
+    const { usuario, progresso, setProgresso } = useContext(UserContext)
+
+    const [habitosDoDia, setHabitosDoDia] = useState(
+        {habitos: [], qtd: "", qtdConcluidos: ""}
+    )
+
+    useEffect(() => {
+        if (usuario !== null) {
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${usuario.token}`
+                }
+            }
+
+            const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
+
+            promessa.then(resposta => {
+                console.log(resposta.data)
+
+                const qtdHabitos = resposta.data.length
+
+                const qtdHabitosConcluidos = resposta.data.filter(habito => {
+                    if (habito.done) {
+                        return true
+                    }
+                }).length
+
+                setHabitosDoDia({...habitosDoDia, habitos: resposta.data, qtd: qtdHabitos, qtdConcluidos: qtdHabitosConcluidos})
+            })
+
+            promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
+        }
+    }, [usuario, recarregar])
+
+    setProgresso((habitosDoDia.qtdConcluidos/habitosDoDia.qtd) * 100)
 
     return(
         <Container>

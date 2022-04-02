@@ -10,13 +10,14 @@ import HabitoDeHoje from "./HabitoDeHoje";
 
 export default function TelaHoje() {
 
-    const { usuario, progresso, setProgresso } = useContext(UserContext)
+    const { usuario } = useContext(UserContext)
 
-    const [habitosDoDia, setHabitosDoDia] = useState([])
-    const [habitosConcluidos, setHabitosConcluidos] = useState([])
     const [recarregar, setRecarregar] = useState(false)
+    const [habitosDoDia, setHabitosDoDia] = useState(
+        {habitos: [], qtd: "", qtdConcluidos: ""}
+    )
 
-    // Exibir habitos do dia
+    // Carregar habitos do dia
     useEffect(() => {
         if (usuario !== null) {
 
@@ -30,22 +31,21 @@ export default function TelaHoje() {
 
             promessa.then(resposta => {
                 console.log(resposta.data)
-                setHabitosDoDia(resposta.data)
 
-                setHabitosConcluidos(
-                    resposta.data.filter(habito => {
-                        if (habito.done) {
-                            return true
-                        }
-                    })
-                )
+                const qtdHabitos = resposta.data.length
+
+                const qtdHabitosConcluidos = resposta.data.filter(habito => {
+                    if (habito.done) {
+                        return true
+                    }
+                }).length
+
+                setHabitosDoDia({...habitosDoDia, habitos: resposta.data, qtd: qtdHabitos, qtdConcluidos: qtdHabitosConcluidos})
             })
 
             promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
         }
     }, [usuario, recarregar])
-
-    setProgresso((habitosConcluidos.length/habitosDoDia.length) * 100)
 
     function recarregarHabitos() {
         setRecarregar(!recarregar)
@@ -58,15 +58,15 @@ export default function TelaHoje() {
             <DiaAtual>
                 <h1>XXXXXX, XX/XX</h1>
 
-                <NenhumConcluido habitosConcluidos={habitosConcluidos}>Nenhum hábito concluído ainda</NenhumConcluido>
+                <NenhumConcluido qtdConcluidos={habitosDoDia.qtdConcluidos}>Nenhum hábito concluído ainda</NenhumConcluido>
 
-                <PorcentagemConclusao habitosConcluidos={habitosConcluidos}>
-                    {((habitosConcluidos.length/habitosDoDia.length) * 100).toFixed(0)}% dos hábitos concluídos
+                <PorcentagemConclusao qtdConcluidos={habitosDoDia.qtdConcluidos}>
+                    {((habitosDoDia.qtdConcluidos/habitosDoDia.qtd) * 100).toFixed(0)}% dos hábitos concluídos
                 </PorcentagemConclusao>
             </DiaAtual>
 
             <ul>
-                {habitosDoDia?.map(habitoDoDia => 
+                {habitosDoDia.habitos?.map(habitoDoDia => 
                     <HabitoDeHoje
                         key={habitoDoDia.id}
                         habitoDoDia={habitoDoDia}
@@ -75,7 +75,7 @@ export default function TelaHoje() {
                 )}
             </ul>
 
-            <Menu progresso={progresso}/>
+            <Menu recarregar={recarregar}/>
         </Container>
     )
 }
@@ -98,7 +98,7 @@ const DiaAtual = styled.div`
 `
 
 const NenhumConcluido = styled.p`
-    display: ${props => props.habitosConcluidos.length > 0 ? "none" : ""};
+    display: ${props => props.qtdConcluidos > 0 ? "none" : ""};
 
     font-style: normal;
     font-weight: 400;
@@ -108,7 +108,7 @@ const NenhumConcluido = styled.p`
 `
 
 const PorcentagemConclusao = styled.p`
-    display: ${props => props.habitosConcluidos.length > 0 ? "" : "none"};
+    display: ${props => props.qtdConcluidos > 0 ? "" : "none"};
 
     font-style: normal;
     font-weight: 400;

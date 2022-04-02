@@ -11,7 +11,7 @@ import Habito from "./Habito";
 
 export default function TelaHabitos() {
 
-    const { usuario, progresso } = useContext(UserContext)
+    const { usuario, progresso} = useContext(UserContext)
 
     const diasDaSemana = ["D", "S", "T", "Q", "Q", "S", "S"]
 

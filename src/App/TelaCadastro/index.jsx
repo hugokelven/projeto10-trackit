@@ -1,11 +1,14 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { ThreeDots } from  'react-loader-spinner'
 import axios from 'axios'
 import styled from 'styled-components'
 
 import Logo from "./../../assets/logo.jpg"
 
 export default function TelaCadastro() {
+
+    const [desabilitar, setDesabilitar] = useState("")
 
     const [cadastro, setCadastro] = useState(
         {
@@ -19,16 +22,21 @@ export default function TelaCadastro() {
     function realizarCadastro(e) {
         e.preventDefault()
 
+        setDesabilitar("disabled")
+
         console.log(cadastro)
         
         const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", cadastro)
 
         promessa.then(resposta => {
-            console.log(resposta.data)
+            console.log(resposta.data) //remover
+            setDesabilitar("")
         })
 
         promessa.catch(erro => {
-            alert(`Erro ${erro.response}. Tente Novamente`)
+            alert(`Erro ${erro.response.status}. Tente Novamente`)
+
+            setDesabilitar("")
         })
     }
 
@@ -39,30 +47,45 @@ export default function TelaCadastro() {
             <form onSubmit={realizarCadastro} className='centralizar-conteudo-em-coluna'>
                 <input
                     type="text"
+                    required
+                    disabled={desabilitar}
                     placeholder="email"
                     value={cadastro.email}
                     onChange={e => setCadastro({...cadastro, email: e.target.value})}
                 />
                 <input
                     type="password"
+                    required
+                    disabled={desabilitar}
                     placeholder="senha"
                     value={cadastro.password}
                     onChange={e => setCadastro({...cadastro, password: e.target.value})}
                 />
                 <input
                     type="text"
+                    required
+                    disabled={desabilitar}
                     placeholder="nome"
                     value={cadastro.name}
                     onChange={e => setCadastro({...cadastro, name: e.target.value})}
                 />
                 <input
                     type="text"
+                    required
+                    disabled={desabilitar}
                     placeholder="foto"
                     value={cadastro.image}
                     onChange={e => setCadastro({...cadastro, image: e.target.value})}
                 />
 
-                <button type="submit">Cadastrar</button>
+                <Botao type="submit" disabled={desabilitar}>Cadastrar</Botao>
+
+                <BotaoCarregando type="button" desabilitar={desabilitar}>
+                    <ThreeDots
+                        color='white'
+                        ariaLabel='loading'
+                    />
+                </BotaoCarregando>
 
                 <Link to={"/"}>
                     <p>Já tem uma conta? Faça login!</p>
@@ -91,25 +114,6 @@ const Container = styled.div`
         background: #FFFFFF;
     }
 
-    button {
-        width: 303px;
-        height: 45px;
-
-        margin-bottom: 25px;
-
-        font-style: normal;
-        font-weight: 400;
-        font-size: 20.976px;
-        line-height: 26px;
-        text-align: center;
-        color: #FFFFFF;
-
-        border: none;
-        border-radius: 4.6px;
-        
-        background: #52B6FF;
-    }
-
     p {
         font-style: normal;
         font-weight: 400;
@@ -119,4 +123,54 @@ const Container = styled.div`
         text-decoration-line: underline;
         color: #52B6FF;
     }
+
+    a {
+        text-decoration: none;
+    }
+`
+
+const Botao = styled.button`
+    display: ${props => props.disabled === "disabled" ? "none" : ""};
+
+    width: 303px;
+    height: 45px;
+
+    margin-bottom: 25px;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20.976px;
+    line-height: 26px;
+    text-align: center;
+    color: #FFFFFF;
+
+    border: none;
+    border-radius: 4.6px;
+    
+    background: #52B6FF;
+`
+
+const BotaoCarregando = styled.button`
+    display: ${props => props.desabilitar === "disabled" ? "flex" : "none"};
+
+    width: 303px;
+    height: 45px;
+
+    margin-bottom: 25px;
+
+    justify-content: center;
+    align-items: center;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20.976px;
+    line-height: 26px;
+    text-align: center;
+    color: #FFFFFF;
+
+    border: none;
+    border-radius: 4.6px;
+
+    background: #52B6FF;
+    opacity: 0.7;
 `
