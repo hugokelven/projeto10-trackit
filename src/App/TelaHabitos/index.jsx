@@ -147,12 +147,13 @@ export default function TelaHabitos() {
 }
 
 const Container = styled.div`
-    height: 100%;
+    min-height: 100vh;
 
     background: #F2F2F2;
 
     ul {
-        margin: 0 18px 0 18px;
+        margin: 0 18px;
+        padding-bottom: 120px;
     }
 
     form {

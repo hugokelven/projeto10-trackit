@@ -77,7 +77,7 @@ export default function Menu({recarregar}) {
 }
 
 const Container = styled.footer`
-    position: sticky;
+    position: fixed;
     z-index: 2;
     bottom: 0; left: 0; right: 0;
 

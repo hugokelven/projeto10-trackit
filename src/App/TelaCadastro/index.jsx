@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { ThreeDots } from  'react-loader-spinner'
 import axios from 'axios'
 import styled from 'styled-components'
@@ -9,6 +9,8 @@ import Logo from "./../../assets/logo.jpg"
 export default function TelaCadastro() {
 
     const [desabilitar, setDesabilitar] = useState("")
+
+    const navigate = useNavigate()
 
     const [cadastro, setCadastro] = useState(
         {
@@ -26,8 +28,10 @@ export default function TelaCadastro() {
 
         const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", cadastro)
 
-        promessa.then(resposta => {
+        promessa.then(() => {
             setDesabilitar("")
+
+            navigate("/", {replace: true})
         })
 
         promessa.catch(erro => {

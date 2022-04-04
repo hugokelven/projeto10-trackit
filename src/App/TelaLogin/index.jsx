@@ -34,7 +34,7 @@ export default function TelaLogin() {
 
             setDesabilitar("")
             
-            navigate("/habitos")
+            navigate("/habitos", {replace: true})
         })
 
         promessa.catch(erro => {
