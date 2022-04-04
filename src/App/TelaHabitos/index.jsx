@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useContext } from "react";
+import { ThreeDots } from  'react-loader-spinner'
 import axios from "axios";
 import styled from 'styled-components'
 
@@ -20,6 +21,7 @@ export default function TelaHabitos() {
     const [exibirCriacao, setExibirCriacao] = useState("escondido")
     const [diasSelecionados, setDiasSelecionados] = useState([])
     const [recarregar, setRecarregar] = useState(false)
+    const [desabilitar, setDesabilitar] = useState("")
 
     // Exibir habitos do usuario
     useEffect(() => {
@@ -34,7 +36,6 @@ export default function TelaHabitos() {
             const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
     
             promessa.then(resposta => {
-                console.log(resposta.data)
                 setMeusHabitos(resposta.data)
             })
     
@@ -57,6 +58,8 @@ export default function TelaHabitos() {
     function cadastrarHabito(e) {
         e.preventDefault()
 
+        setDesabilitar("disabled")
+
         const config = {
             headers: {
                 Authorization: `Bearer ${usuario.token}`
@@ -66,11 +69,17 @@ export default function TelaHabitos() {
         const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", {name: habito, days: diasSelecionados}, config)
 
         promessa.then(resposta => {
-            console.log(resposta.data)
             recarregarHabitos()
+
+            setHabito("")
+            setDesabilitar("")
         })
 
-        promessa.catch(erro => {alert(`Erro ${erro.response.status}. Tente novamente.`)})
+        promessa.catch(erro => {
+            alert(`Erro ${erro.response.status}. Tente novamente.`)
+
+            setDesabilitar("")
+        })
     }
 
     function recarregarHabitos() {
@@ -89,7 +98,9 @@ export default function TelaHabitos() {
             <form className={exibirCriacao} onSubmit={cadastrarHabito}>
                 <input
                     type="text"
+                    required
                     placeholder='nome do habito'
+                    disabled={desabilitar}
                     value={habito}
                     onChange={e => {setHabito(e.target.value)}}
                 />
@@ -107,7 +118,13 @@ export default function TelaHabitos() {
 
                 <div className="Botoes">
                     <button type="button" onClick={() => {setExibirCriacao("escondido")}}>Cancelar</button>
-                    <button type="submit">Salvar</button>
+                    <BotaoSalvar type="submit" disabled={desabilitar}>Salvar</BotaoSalvar>
+                    <BotaoCarregando type="button" desabilitar={desabilitar}>
+                        <ThreeDots
+                            color='white'
+                            ariaLabel='loading'
+                        />
+                    </BotaoCarregando>
                 </div>
             </form>
 
@@ -130,15 +147,17 @@ export default function TelaHabitos() {
 }
 
 const Container = styled.div`
-    height: 100vh;
+    height: 100%;
 
     background: #F2F2F2;
 
     ul {
-        margin: 0 18px;
+        margin: 0 18px 0 18px;
     }
 
     form {
+        position: relative;
+
         width: calc(100% - (2 * 18px));
         min-height: 180px;
 
@@ -244,4 +263,33 @@ const SemHabitos = styled.p`
     line-height: 22px;
 
     color: #666666;
+`
+
+const BotaoSalvar = styled.button`
+    display: ${props => props.disabled === "disabled" ? "none" : ""};
+`
+
+const BotaoCarregando = styled.button`
+    display: ${props => props.desabilitar === "disabled" ? "flex" : "none"};
+
+    width: 84px;
+    height: 35px;
+
+    margin-left: 23px;
+
+    justify-content: center;
+    align-items: center;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20.976px;
+    line-height: 26px;
+    text-align: center;
+    color: #FFFFFF;
+
+    border: none;
+    border-radius: 4.6px;
+
+    background: #52B6FF;
+    opacity: 0.7;
 `

@@ -18,7 +18,7 @@ export default function Topo() {
 
 const Container = styled.header`
     position: sticky;
-    z-index: 1;
+    z-index: 3;
     top: 0; left: 0; right: 0;
 
     height: 70px;

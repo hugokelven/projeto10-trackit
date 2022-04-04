@@ -24,12 +24,9 @@ export default function TelaCadastro() {
 
         setDesabilitar("disabled")
 
-        console.log(cadastro)
-        
         const promessa = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", cadastro)
 
         promessa.then(resposta => {
-            console.log(resposta.data) //remover
             setDesabilitar("")
         })
 

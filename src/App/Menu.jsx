@@ -29,8 +29,6 @@ export default function Menu({recarregar}) {
             const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
 
             promessa.then(resposta => {
-                console.log(resposta.data)
-
                 const qtdHabitos = resposta.data.length
 
                 const qtdHabitosConcluidos = resposta.data.filter(habito => {
@@ -79,13 +77,13 @@ export default function Menu({recarregar}) {
 }
 
 const Container = styled.footer`
-    position: fixed;
-    z-index: 1;
+    position: sticky;
+    z-index: 2;
     bottom: 0; left: 0; right: 0;
 
     height: 70px;
 
-    margin: 0;
+    margin-top: 40px;
 
     display: flex;
     justify-content: space-between;

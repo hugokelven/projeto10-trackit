@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react"
 import { useContext } from "react";
 import axios from "axios";
+import dayjs from "dayjs"
 import styled from 'styled-components'
 
 import UserContext from "../../contexts/UsuarioContext";
+import "../../../node_modules/dayjs/locale/pt-br"
 import Menu from '../Menu';
 import Topo from "../Topo";
 import HabitoDeHoje from "./HabitoDeHoje";
@@ -30,8 +32,6 @@ export default function TelaHoje() {
             const promessa = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
 
             promessa.then(resposta => {
-                console.log(resposta.data)
-
                 const qtdHabitos = resposta.data.length
 
                 const qtdHabitosConcluidos = resposta.data.filter(habito => {
@@ -56,7 +56,7 @@ export default function TelaHoje() {
             <Topo/>
 
             <DiaAtual>
-                <h1>XXXXXX, XX/XX</h1>
+                <h1>{dayjs().locale("pt-br").format("dddd, DD/MM")}</h1>
 
                 <NenhumConcluido qtdConcluidos={habitosDoDia.qtdConcluidos}>Nenhum hábito concluído ainda</NenhumConcluido>
 
@@ -81,7 +81,7 @@ export default function TelaHoje() {
 }
 
 const Container = styled.div`
-    height: 100vh;
+    height: 100%;
 
     background: #F2F2F2;
 `

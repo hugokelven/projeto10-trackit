@@ -6,8 +6,6 @@ import styled from 'styled-components'
 
 import Logo from "./../../assets/logo.jpg"
 
-// import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-
 export default function TelaLogin() {
 
     const navigate = useNavigate()
@@ -32,7 +30,6 @@ export default function TelaLogin() {
             const {image, name, token} = resposta.data
             const usuario = {imagem: image, nome: name, token: token}
 
-            console.log(usuario) //remover
             window.localStorage.setItem('usuario', JSON.stringify(usuario));
 
             setDesabilitar("")
